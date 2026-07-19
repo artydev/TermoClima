@@ -69,7 +69,7 @@ namespace JsonServer
             using var message = new MailMessage
             {
                 From = new MailAddress(_settings.FromAddress, _settings.FromName),
-                Subject = $"Nuovo ordine – TermoClima (#{orderId})",
+                Subject = $"Nuovo ordine – TermoClima (#{orderId}",
                 Body = body,
                 IsBodyHtml = true,
             };
@@ -117,11 +117,14 @@ namespace JsonServer
         private static string BuildOrderBody(Dictionary<string, object> order, string baseUrl)
         {
             var it = new CultureInfo("it-IT");
+            
             string Field(string key) => order.TryGetValue(key, out var v) ? v?.ToString() ?? "" : "";
 
             List<InquiryItem> items = new();
             try { items = JsonSerializer.Deserialize<List<InquiryItem>>(Field("items")) ?? new(); }
             catch { }
+
+            string email = Field("email");
 
             string itemsHtml = string.Join("\n", items.Select((item, index) =>
                 $"""
@@ -163,8 +166,12 @@ namespace JsonServer
                         </td>
                     </tr>
                     <tr>
+                    
+                    </tr>
+                    <tr>
                         <td style="padding: 30px;">
-                            <h2 style="color: #2c3e50; margin-top: 0;">Nuovo Ordine #{Field("id")}</h2>
+                            <h2 style="color: #2c3e50; margin-top: 0;">Nuovo Ordine</h2>
+                            <h2  style="color: #2c3e50;">Client Email : {email}</h2>
                             <table width="100%" style="margin-top: 30px; border-collapse: collapse; font-size: 14px;">
                                 <thead>
                                     <tr style="background-color: #ecf0f1;">

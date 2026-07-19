@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Data\db.jsonx">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
@@ -38,9 +44,6 @@
     whole skip-rules block unnecessary either way.
   -->
   <ItemGroup>
-    <Content Update="Data\db.json">
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </Content>
     <Content Update="db.json" CopyToPublishDirectory="Never" />
     <Content Update="wwwroot\uploads\**" CopyToPublishDirectory="Never" />
 

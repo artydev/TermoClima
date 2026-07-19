@@ -1,8 +1,8 @@
 {
   "orders": [
     {
-      "customerName": "DS",
-      "email": "DS@gmail.com",
+      "customerName": "DI DIO Salvatore",
+      "email": "salvatore.didio@gmail.com",
       "phone": "",
       "address": "",
       "city": "",
@@ -11,51 +11,28 @@
       "notes": "",
       "items": [
         {
-          "ProductId": "48",
-          "Name": "GREEN POWER ECO-RICCI",
+          "ProductId": "39",
+          "Name": "STUFA A PELLET AQA X 6-24",
           "Qty": 1,
-          "Price": 17.9,
+          "Price": 3520,
           "Currency": "\u20AC"
         },
         {
-          "ProductId": "41",
-          "Name": "STUFA A PELLET V SPECIAL PLUS",
+          "ProductId": "51",
+          "Name": "PROMO CLIMATIZZATORE BALTUR",
           "Qty": 1,
-          "Price": 1500,
+          "Price": 900,
           "Currency": "\u20AC"
         }
       ],
-      "subtotal": 1517.9,
+      "subtotal": 4420,
       "status": "In attesa",
-      "createdAt": "2026-07-19T14:17:20.3840457Z",
+      "createdAt": "2026-07-19T19:30:44.1228762Z",
       "id": "1"
     },
     {
-      "customerName": "DS",
-      "email": "DS@gmail.com",
-      "phone": "",
-      "address": "",
-      "city": "",
-      "postalCode": "",
-      "deliveryMethod": "Ritiro in negozio",
-      "notes": "",
-      "items": [
-        {
-          "ProductId": "53",
-          "Name": "PROMO CALDAIA A GAS BALTUR",
-          "Qty": 1,
-          "Price": 1990,
-          "Currency": "\u20AC"
-        }
-      ],
-      "subtotal": 1990,
-      "status": "In attesa",
-      "createdAt": "2026-07-19T14:20:19.4365330Z",
-      "id": "2"
-    },
-    {
-      "customerName": "DS",
-      "email": "DS@gmail.com",
+      "customerName": "DI DIO  Salvatore",
+      "email": "salvatore.didio@gmail.com",
       "phone": "",
       "address": "",
       "city": "",
@@ -73,100 +50,31 @@
       ],
       "subtotal": 2520,
       "status": "In attesa",
-      "createdAt": "2026-07-19T14:23:23.6187488Z",
+      "createdAt": "2026-07-19T19:38:05.2501789Z",
+      "id": "2"
+    },
+    {
+      "customerName": "Salvatore DI DIO",
+      "email": "salvatore.didio@gmail.com",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": "",
+      "deliveryMethod": "Ritiro in negozio",
+      "notes": "",
+      "items": [
+        {
+          "ProductId": "60",
+          "Name": "CUCINA A LEGNA CON FORNO",
+          "Qty": 1,
+          "Price": 1340,
+          "Currency": "\u20AC"
+        }
+      ],
+      "subtotal": 1340,
+      "status": "In attesa",
+      "createdAt": "2026-07-19T19:42:37.6437643Z",
       "id": "3"
-    },
-    {
-      "customerName": "DS",
-      "email": "DS@gmail.com",
-      "phone": "",
-      "address": "",
-      "city": "",
-      "postalCode": "",
-      "deliveryMethod": "Ritiro in negozio",
-      "notes": "",
-      "items": [
-        {
-          "ProductId": "39",
-          "Name": "STUFA A PELLET AQA X 6-24",
-          "Qty": 1,
-          "Price": 3520,
-          "Currency": "\u20AC"
-        }
-      ],
-      "subtotal": 3520,
-      "status": "In attesa",
-      "createdAt": "2026-07-19T14:25:47.1925783Z",
-      "id": "4"
-    },
-    {
-      "customerName": "DS",
-      "email": "DS@gmail.com",
-      "phone": "",
-      "address": "",
-      "city": "",
-      "postalCode": "",
-      "deliveryMethod": "Ritiro in negozio",
-      "notes": "",
-      "items": [
-        {
-          "ProductId": "45",
-          "Name": "STUFA A LEGNA QUADRIFOGLIO",
-          "Qty": 1,
-          "Price": 1750,
-          "Currency": "\u20AC"
-        }
-      ],
-      "subtotal": 1750,
-      "status": "In attesa",
-      "createdAt": "2026-07-19T14:27:45.9762608Z",
-      "id": "5"
-    },
-    {
-      "customerName": "DS",
-      "email": "ds@gmail.com",
-      "phone": "",
-      "address": "",
-      "city": "",
-      "postalCode": "",
-      "deliveryMethod": "Ritiro in negozio",
-      "notes": "",
-      "items": [
-        {
-          "ProductId": "52",
-          "Name": "PROMO CLIMATIZZATORE BALTUR",
-          "Qty": 1,
-          "Price": 980,
-          "Currency": "\u20AC"
-        }
-      ],
-      "subtotal": 980,
-      "status": "In attesa",
-      "createdAt": "2026-07-19T14:35:57.0446209Z",
-      "id": "6"
-    },
-    {
-      "customerName": "DS",
-      "email": "DS@gmail.com",
-      "phone": "",
-      "address": "",
-      "city": "",
-      "postalCode": "",
-      "deliveryMethod": "Ritiro in negozio",
-      "notes": "",
-      "items": [
-        {
-          "ProductId": "49",
-          "Name": "ACCENDIFUOCO ECOLOGICO",
-          "Qty": 1,
-          "Price": 2.6,
-          "Currency": "\u20AC"
-        }
-      ],
-      "subtotal": 2.6,
-      "status": "In attesa",
-      "createdAt": "2026-07-19T14:40:06.6217769Z",
-      "id": "7"
     }
   ],
   "products": [

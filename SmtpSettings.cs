@@ -16,7 +16,7 @@ namespace JsonServer
         public string Password { get; set; } = "";
         public string FromAddress { get; set; } = "";
         public string FromName { get; set; } = "TermoClima";
-        public string ToAddress { get; set; } = "termoclima00@gmail.com";
+        public string ToAddress { get; set; } = "salve.didio@laposte.net";
 
         public string BaseUrl { get; set; } = "https://termoclima.runasp.net/";
 
