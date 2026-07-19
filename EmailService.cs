@@ -111,7 +111,9 @@ namespace JsonServer
 
             return string.Join("\n", parts);
         }
-
+        
+        
+        // Build Order to be sent via SMTP
         private static string BuildOrderBody(Dictionary<string, object> order)
         {
             string Field(string key) => order.TryGetValue(key, out var v) ? v?.ToString() ?? "" : "";
