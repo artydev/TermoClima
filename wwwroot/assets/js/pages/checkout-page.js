@@ -114,6 +114,10 @@ function renderConfirmation(order) {
 }
 
 async function submitOrder(items, subtotal) {
+
+    console.log(items);
+
+
   const form = document.getElementById('checkout-form');
   const btn = document.getElementById('submit-order-btn');
   const errorEl = document.getElementById('form-error');
@@ -141,7 +145,8 @@ async function submitOrder(items, subtotal) {
     postalCode: (data.postalCode || '').trim(),
     deliveryMethod: data.deliveryMethod || '',
     notes: (data.notes || '').trim(),
-    items: items.map(item => ({
+      items: items.map(item => ({
+      productId: item.productId,
       name: item.name,
       qty: item.qty,
       price: item.price,
@@ -178,7 +183,8 @@ async function submitOrder(items, subtotal) {
 }
 
 function init() {
-  const items = Cart.get();
+    const items = Cart.get();
+
   const subtotal = Cart.subtotal();
 
   if (items.length === 0) {

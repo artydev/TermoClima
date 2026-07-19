@@ -5,7 +5,9 @@ export const Cart = {
   get() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
+      const data = raw ? JSON.parse(raw) : [];
+    
+      return data;
     } catch {
       return [];
     }
@@ -36,6 +38,7 @@ export const Cart = {
         qty
       });
     }
+
     this.save(items);
     shopChannel.postMessage({ type: 'SHOW_NOTIF', message: `${product.name} aggiunto al carrello` });
     showNotification(`${product.name} aggiunto al carrello`);

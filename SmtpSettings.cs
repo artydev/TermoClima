@@ -18,6 +18,8 @@ namespace JsonServer
         public string FromName { get; set; } = "TermoClima";
         public string ToAddress { get; set; } = "termoclima00@gmail.com";
 
+        public string BaseUrl { get; set; } = "https://termoclima.runasp.net/";
+
         public bool IsConfigured =>
             !string.IsNullOrWhiteSpace(User) &&
             !string.IsNullOrWhiteSpace(Password) &&

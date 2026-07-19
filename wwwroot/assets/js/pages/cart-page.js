@@ -45,7 +45,8 @@ async function sendInquiry(items, subtotal, btn) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        items: items.map(item => ({
+          items: items.map(item => ({
+          productid:item.id,
           name: item.name,
           qty: item.qty,
           price: item.price,
