@@ -2,7 +2,7 @@ using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 using System.Text.Json;
-using System.Xml.Linq;
+using System.Globalization;
 
 namespace JsonServer
 {
@@ -111,54 +111,181 @@ namespace JsonServer
 
             return string.Join("\n", parts);
         }
-        
-        
-        // Build Order to be sent via SMTP
-        private static string BuildOrderBody(Dictionary<string, object> order)
+
+
+        // Build Order to be sent via SMTP with  HTML formatting
+    
+
+        private static string _BuildOrderBody(Dictionary<string, object> order)
         {
             string Field(string key) => order.TryGetValue(key, out var v) ? v?.ToString() ?? "" : "";
 
-            // deserialize to List<InquiryItem>
-            var items = JsonSerializer.Deserialize<List<InquiryItem>>(Field("items")) as List<InquiryItem>;   //   Field("items") ;
+            // 1. Deserialize Items
+            List<InquiryItem> items = new();
+            try { items = JsonSerializer.Deserialize<List<InquiryItem>>(Field("items")) ?? new(); }
+            catch { }
 
+            // 2. Build the Product Table Rows
+            // Using zebra-striping for readability
+            string itemsHtml = string.Join("\n", items.Select((item, index) =>
+                $"""
+        <tr style="background-color: {(index % 2 == 0 ? "#ffffff" : "#f9f9f9")};">
+            <td style="padding: 12px; border-bottom: 1px solid #eee; color: #333;">{item.Name}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #eee; color: #555; text-align: center;">{item.Qty}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #eee; color: #555; text-align: right;">{item.Currency}{item.Price * item.Qty:0.00}</td>
+        </tr>
+        """
+            ));
 
-            var lines = new List<string>
-            {
-                $"Nuovo ordine ricevuto — #{Field("id")}",
-                "",
-                $"Cliente: {Field("customerName")}",
-                $"Email: {Field("email")}",
-                $"Telefono: {Field("phone")}",
-                $"Indirizzo: {Field("address")}, {Field("city")} {Field("postalCode")}".Trim().Trim(','),
-                $"Ritiro/consegna: {Field("deliveryMethod")}",
-                "",
-                "Prodotti:",
-            };
+            // 3. Conditional sections
+            string notes = Field("notes");
+            string notesHtml = string.IsNullOrWhiteSpace(notes) ? "" :
+                $"""
+        <div style="background-color: #fff3cd; border-left: 4px solid #ffecb5; padding: 15px; margin-top: 20px;">
+            <strong style="color: #856404;">Note del cliente:</strong>
+            <p style="margin: 5px 0 0 0; color: #856404;">{notes}</p>
+        </div>
+        """;
 
-           
-            
-            foreach (var item in items)
-            {
-               
-                lines.Add($"  {item.Qty}x {item.Name} ({item.Currency}{item.Price:0.00} cad.) — {item.Currency}{item.Price * item.Qty:0.00}");
-            }
-            
+            // 4. Return Final HTML Template
+            return $"""
+                    <div style="font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f4; padding: 40px 20px;">
+                        <table width="600" align="center" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <!-- Header -->
+                            <tr>
+                                <td style="background-color: #ffffff; padding: 25px; text-align: center; color: #ffffff;">
+                                    <h1 style="margin: 0; font-size: 24px;">TermoClima</h1>
+                                </td>
+                            </tr>
+                            <!-- Content -->
+                            <tr>
+                                <td style="padding: 30px;">
+                                    <h2 style="color: #2c3e50; margin-top: 0;">Nuovo Ordine #{Field("id")}</h2>
+                                    <p style="color: #666; font-size: 14px;">Hai ricevuto un nuovo ordine dai canali digitali.</p>
+                    
+                                    <table width="100%" style="margin-top: 20px; font-size: 14px;">
+                                        <tr>
+                                            <td style="width: 50%; vertical-align: top;">
+                                                <strong style="color: #2c3e50;">Dati Cliente:</strong><br/>
+                                                {Field("customerName")}<br/>
+                                                {Field("email")}<br/>
+                                                {Field("phone")}
+                                            </td>
+                                            <td style="width: 50%; vertical-align: top;">
+                                                <strong style="color: #2c3e50;">Spedizione:</strong><br/>
+                                                {Field("address")}<br/>
+                                                {Field("city")}, {Field("postalCode")}<br/>
+                                                <span style="font-weight: bold; color: #27ae60;">{Field("deliveryMethod")}</span>
+                                            </td>
+                                        </tr>
+                                    </table>
 
-            lines.Add("");
-            lines.Add($"Totale: €{Field("subtotal")}");
+                                    <table width="100%" style="margin-top: 30px; border-collapse: collapse; font-size: 14px;">
+                                        <thead>
+                                            <tr style="background-color: #ecf0f1;">
+                                                <th style="padding: 12px; text-align: left; color: #2c3e50;">Prodotto</th>
+                                                <th style="padding: 12px; text-align: center; color: #2c3e50;">Qta</th>
+                                                <th style="padding: 12px; text-align: right; color: #2c3e50;">Totale</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {itemsHtml}
+                                        </tbody>
+                                    </table>
 
-            var notes = Field("notes");
-            if (!string.IsNullOrWhiteSpace(notes))
-            {
-                lines.Add("");
-                lines.Add($"Note del cliente: {notes}");
-            }
+                                    <div style="text-align: right; margin-top: 20px;">
+                                        <span style="font-size: 18px; color: #2c3e50;"><strong>Totale: €{Field("subtotal")}</strong></span>
+                                    </div>
 
-            lines.Add("");
-            lines.Add("Il pagamento verrà concordato con il cliente (contanti, bonifico, POS in negozio o Klarna).");
-
-            return string.Join("\n", lines);
+                                    {notesHtml}
+                                </td>
+                            </tr>
+                            <!-- Footer -->
+                            <tr>
+                                <td style="background-color: #f9f9f9; padding: 20px; text-align: center; color: #777; font-size: 12px; border-top: 1px solid #eee;">
+                                    Il pagamento verrà concordato con il cliente (contanti, bonifico, POS in negozio o Klarna).
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    """;
         }
-    }
+        
+        
+        
+
+        private static string BuildOrderBody(Dictionary<string, object> order)
+            {
+                var it = new CultureInfo("it-IT"); // 2. Define Italian culture
+                string Field(string key) => order.TryGetValue(key, out var v) ? v?.ToString() ?? "" : "";
+
+                // 1. Deserialize Items
+                List<InquiryItem> items = new();
+                try { items = JsonSerializer.Deserialize<List<InquiryItem>>(Field("items")) ?? new(); }
+                catch { }
+
+                // 2. Build the Product Table Rows
+                // Using .ToString("N2", it) ensures 2 decimal places and Italian formatting
+                string itemsHtml = string.Join("\n", items.Select((item, index) =>
+                    $"""
+                <tr style="background-color: {(index % 2 == 0 ? "#ffffff" : "#f9f9f9")};">
+                    <td style="padding: 12px; border-bottom: 1px solid #eee; color: #333;">{item.Name}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #eee; color: #555; text-align: center;">{item.Qty}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #eee; color: #555; text-align: right;"> {(item.Price * item.Qty).ToString("N2", it)} {item.Currency}</td>
+                </tr>
+                """
+                ));
+
+                // 3. Conditional sections
+                string notes = Field("notes");
+                string notesHtml = string.IsNullOrWhiteSpace(notes) ? "" :
+                    $"""
+                <div style="background-color: #fff3cd; border-left: 4px solid #ffecb5; padding: 15px; margin-top: 20px;">
+                    <strong style="color: #856404;">Note del cliente:</strong>
+                    <p style="margin: 5px 0 0 0; color: #856404;">{notes}</p>
+                </div>
+                """;
+
+                // 4. Calculate/Format Subtotal
+                // Attempt to parse the string to decimal, otherwise just display the raw value
+                decimal.TryParse(Field("subtotal"), NumberStyles.Any, CultureInfo.InvariantCulture, out decimal subtotal);
+                string formattedSubtotal = subtotal.ToString("N2", it);
+
+                // 5. Return Final HTML Template
+                return $"""
+            <div style="font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f4; padding: 40px 20px;">
+                <table width="600" align="center" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <tr>
+                        <td style="background-color: #005600; padding: 25px; text-align: center; ">
+                            <h1 style="margin: 0; font-size: 24px; color:white;">TermoClima</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 30px;">
+                            <h2 style="color: #2c3e50; margin-top: 0;">Nuovo Ordine #{Field("id")}</h2>
+                            <table width="100%" style="margin-top: 30px; border-collapse: collapse; font-size: 14px;">
+                                <thead>
+                                    <tr style="background-color: #ecf0f1;">
+                                        <th style="padding: 12px; text-align: left; color: #2c3e50;">Prodotto</th>
+                                        <th style="padding: 12px; text-align: center; color: #2c3e50;">Qta</th>
+                                        <th style="padding: 12px; text-align: right; color: #2c3e50;">Totale</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {itemsHtml}
+                                </tbody>
+                            </table>
+                            <div style="text-align: right; margin-top: 20px;">
+                                <span style="font-size: 18px; color: #2c3e50;"><strong>Totale: {formattedSubtotal} €</strong></span>
+                            </div>
+                            {notesHtml}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            """;
+            }
+
+        }
 }
 

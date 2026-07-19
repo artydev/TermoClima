@@ -111,6 +111,256 @@
       "status": "In attesa",
       "createdAt": "2026-07-19T12:13:33.1185254Z",
       "id": "4"
+    },
+    {
+      "customerName": "DS",
+      "email": "DS@g.com",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": "",
+      "deliveryMethod": "Ritiro in negozio",
+      "notes": "",
+      "items": [
+        {
+          "Name": "CAMINETTO INUX 75 FREE 2F",
+          "Qty": 1,
+          "Price": 2140,
+          "Currency": "\u20AC"
+        }
+      ],
+      "subtotal": 2140,
+      "status": "In attesa",
+      "createdAt": "2026-07-19T12:31:58.5797629Z",
+      "id": "5"
+    },
+    {
+      "customerName": "DS",
+      "email": "DS@gmail.com",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": "",
+      "deliveryMethod": "Ritiro in negozio",
+      "notes": "",
+      "items": [
+        {
+          "Name": "BARBECUE A CARBONELLA",
+          "Qty": 2,
+          "Price": 45,
+          "Currency": "\u20AC"
+        }
+      ],
+      "subtotal": 90,
+      "status": "In attesa",
+      "createdAt": "2026-07-19T12:37:47.6046614Z",
+      "id": "6"
+    },
+    {
+      "customerName": "salvatore.didio@gmail.com",
+      "email": "salvatore.didio@gmail.com",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": "",
+      "deliveryMethod": "Ritiro in negozio",
+      "notes": "",
+      "items": [
+        {
+          "Name": "STUFA A PELLET V SPECIAL PLUS",
+          "Qty": 1,
+          "Price": 1500,
+          "Currency": "\u20AC"
+        },
+        {
+          "Name": "STUFA A PELLET TONDA PLUS",
+          "Qty": 1,
+          "Price": 2520,
+          "Currency": "\u20AC"
+        }
+      ],
+      "subtotal": 4020,
+      "status": "In attesa",
+      "createdAt": "2026-07-19T12:41:21.1252572Z",
+      "id": "7"
+    },
+    {
+      "customerName": "DI DIO Salvatore",
+      "email": "salvatore@gmail.com",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": "",
+      "deliveryMethod": "Ritiro in negozio",
+      "notes": "",
+      "items": [
+        {
+          "Name": "BARBECUE A CARBONELLA",
+          "Qty": 1,
+          "Price": 75,
+          "Currency": "\u20AC"
+        }
+      ],
+      "subtotal": 75,
+      "status": "In attesa",
+      "createdAt": "2026-07-19T12:42:21.4643712Z",
+      "id": "8"
+    },
+    {
+      "customerName": "salve didio",
+      "email": "salv@gmai.com",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": "",
+      "deliveryMethod": "Ritiro in negozio",
+      "notes": "",
+      "items": [
+        {
+          "Name": "SACCO BRACE",
+          "Qty": 1,
+          "Price": 9.8,
+          "Currency": "\u20AC"
+        },
+        {
+          "Name": "BARBECUE A CARBONELLA",
+          "Qty": 1,
+          "Price": 45,
+          "Currency": "\u20AC"
+        }
+      ],
+      "subtotal": 54.8,
+      "status": "In attesa",
+      "createdAt": "2026-07-19T12:46:35.2286415Z",
+      "id": "9"
+    },
+    {
+      "customerName": "DS",
+      "email": "ds@gmail.com",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": "",
+      "deliveryMethod": "Ritiro in negozio",
+      "notes": "",
+      "items": [
+        {
+          "Name": "CUCINA A LEGNA CON FORNO",
+          "Qty": 1,
+          "Price": 1340,
+          "Currency": "\u20AC"
+        },
+        {
+          "Name": "ACCENDIGRILL LIQUIDO",
+          "Qty": 1,
+          "Price": 9.5,
+          "Currency": "\u20AC"
+        }
+      ],
+      "subtotal": 1349.5,
+      "status": "In attesa",
+      "createdAt": "2026-07-19T12:50:08.1795208Z",
+      "id": "10"
+    },
+    {
+      "customerName": "DS",
+      "email": "DS@gmail.com",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": "",
+      "deliveryMethod": "Ritiro in negozio",
+      "notes": "",
+      "items": [
+        {
+          "Name": "GREEN POWER ECO-RICCI",
+          "Qty": 1,
+          "Price": 17.9,
+          "Currency": "\u20AC"
+        },
+        {
+          "Name": "REZULT PELLET",
+          "Qty": 1,
+          "Price": 6.54,
+          "Currency": "\u20AC"
+        }
+      ],
+      "subtotal": 24.439999999999998,
+      "status": "In attesa",
+      "createdAt": "2026-07-19T12:51:28.2318286Z",
+      "id": "11"
+    },
+    {
+      "customerName": "DS",
+      "email": "DS@gmail.com",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": "",
+      "deliveryMethod": "Ritiro in negozio",
+      "notes": "",
+      "items": [
+        {
+          "Name": "STUFA A PELLET AQA X 6-24",
+          "Qty": 1,
+          "Price": 3520,
+          "Currency": "\u20AC"
+        }
+      ],
+      "subtotal": 3520,
+      "status": "In attesa",
+      "createdAt": "2026-07-19T12:55:01.4396486Z",
+      "id": "12"
+    },
+    {
+      "customerName": "ds",
+      "email": "ds@gmail.com",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": "",
+      "deliveryMethod": "Ritiro in negozio",
+      "notes": "",
+      "items": [
+        {
+          "Name": "STUFA A PELLET AQA X 6-24",
+          "Qty": 1,
+          "Price": 3520,
+          "Currency": "\u20AC"
+        }
+      ],
+      "subtotal": 3520,
+      "status": "In attesa",
+      "createdAt": "2026-07-19T12:56:12.7577657Z",
+      "id": "13"
+    },
+    {
+      "customerName": "DS",
+      "email": "DS@gmail.com",
+      "phone": "",
+      "address": "",
+      "city": "",
+      "postalCode": "",
+      "deliveryMethod": "Ritiro in negozio",
+      "notes": "",
+      "items": [
+        {
+          "Name": "SACCO BRACE",
+          "Qty": 1,
+          "Price": 9.8,
+          "Currency": "\u20AC"
+        },
+        {
+          "Name": "CUCINA A LEGNA CON FORNO",
+          "Qty": 1,
+          "Price": 1340,
+          "Currency": "\u20AC"
+        }
+      ],
+      "subtotal": 1349.8,
+      "status": "In attesa",
+      "createdAt": "2026-07-19T12:57:16.0862194Z",
+      "id": "14"
     }
   ],
   "products": [
