@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Media Library | Admin</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --danger: #ef4444;
+            --bg: #f9fafb;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            padding: 2rem;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Upload Section */
+        .upload-zone {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 2rem;
+            border: 2px dashed #e5e7eb;
+        }
+
+        /* Gallery Grid */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+            .card:hover {
+                transform: translateY(-4px);
+            }
+
+            .card img {
+                width: 100%;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 4px;
+                margin-bottom: 0.5rem;
+            }
+
+        button {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-upload {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Media Library</h1>
+
+        <div class="upload-zone">
+            <input type="file" id="fileInput" accept="image/*" />
+            <button class="btn-upload" onclick="uploadImage()">Upload Image</button>
+        </div>
+
+        <div class="gallery" id="imageList">
+        </div>
+    </div>
+
+    <script>
+        // 1. Fetch and render images on load
+        async function loadImages() {
+            // Note: This assumes you have a route that returns a list of filenames
+            // If you don't have this, you'll need to add app.MapGet("/images", ...) in Program.cs
+            const response = await fetch('/api/images');
+            const images = await response.json();
+            const container = document.getElementById('imageList');
+
+            container.innerHTML = images.map(img => `
+                    <div class="card">
+                        <img src="/uploads/${img}" alt="Media">
+                        <small>${img}</small>
+                        <button class="btn-delete" onclick="deleteImage('${img}')">Delete</button>
+                    </div>
+                `).join('');
+        }
+
+        async function uploadImage() {
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) return alert("Please select a file.");
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            await fetch('/api/media/upload', { method: 'POST', body: formData });
+            loadImages(); // Update UI without full page refresh
+        }
+
+        async function deleteImage(fileName) {
+            if (!confirm("Are you sure?")) return;
+            await fetch(`/api/media/delete/${fileName}`, { method: 'DELETE' });
+            loadImages();
+        }
+
+        loadImages();
+    </script>
+</body>
+</html>

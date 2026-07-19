@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Pubblica Promozione | Admin</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --danger: #ef4444;
+            --good: #16a34a;
+            --bg: #f9fafb;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            padding: 2rem;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .upload-zone {
+            text-align: center;
+            border: 2px dashed #e5e7eb;
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .status {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status.ok { color: var(--good); }
+        .status.error { color: var(--danger); }
+
+        .backup-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid #f0f1f3;
+        }
+
+        .backup-row:last-child { border-bottom: none; }
+
+        .backup-time {
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+
+        .backup-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .backup-actions button {
+            font-size: 0.82rem;
+            padding: 0.4rem 0.75rem;
+        }
+
+        .empty-note {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p><a href="/admin/dashboard">← Torna alla dashboard</a></p>
+        <h1>Pubblica pagina Promozione</h1>
+        <p class="empty-note">Carica il file .html esportato (es. da Canva). La pagina attuale viene salvata automaticamente come backup prima di essere sostituita.</p>
+
+        <div class="panel">
+            <div class="upload-zone">
+                <input type="file" id="fileInput" accept=".html,.htm" />
+                <div>
+                    <button class="btn-primary" id="publishBtn" onclick="publishPromo()" style="margin-top:1rem">Pubblica</button>
+                </div>
+                <div id="publishStatus" class="status"></div>
+            </div>
+            <p style="margin-top:1.25rem">
+                <a href="/promozione.html" target="_blank">→ Vedi la pagina live attuale</a>
+            </p>
+        </div>
+
+        <div class="panel">
+            <h2 style="margin-top:0">Backup precedenti</h2>
+            <div id="backupList"></div>
+        </div>
+    </div>
+
+    <script>
+        function parseBackupTimestamp(fileName) {
+            // promozione_YYYYMMDD_HHMMSS.html
+            const match = fileName.match(/(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})/);
+            if (!match) return fileName;
+            const [, y, mo, d, h, mi, s] = match;
+            return `${d}/${mo}/${y} alle ${h}:${mi}:${s}`;
+        }
+
+        async function loadBackups() {
+            const res = await fetch('/api/promo/backups');
+            const files = await res.json();
+            const list = document.getElementById('backupList');
+
+            if (files.length === 0) {
+                list.innerHTML = '<p class="empty-note">Nessun backup ancora.</p>';
+                return;
+            }
+
+            list.innerHTML = files.map(f => `
+                <div class="backup-row">
+                    <span class="backup-time">${parseBackupTimestamp(f)}</span>
+                    <div class="backup-actions">
+                        <button class="btn-outline" onclick="previewBackup('${f}')">Anteprima</button>
+                        <button class="btn-danger" onclick="restoreBackup('${f}')">Ripristina</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function previewBackup(fileName) {
+            window.open(`/api/promo/backups/${fileName}`, '_blank');
+        }
+
+        async function restoreBackup(fileName) {
+            if (!confirm('Ripristinare questa versione? La pagina attuale verrà salvata come backup prima del ripristino.')) return;
+            const res = await fetch(`/api/promo/restore/${fileName}`, { method: 'POST' });
+            if (res.ok) {
+                alert('Versione ripristinata.');
+                loadBackups();
+            } else {
+                alert('Ripristino non riuscito.');
+            }
+        }
+
+        async function publishPromo() {
+            const input = document.getElementById('fileInput');
+            const btn = document.getElementById('publishBtn');
+            const status = document.getElementById('publishStatus');
+            const file = input.files[0];
+
+            if (!file) {
+                status.textContent = 'Seleziona prima un file .html.';
+                status.className = 'status error';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            btn.disabled = true;
+            status.textContent = 'Pubblicazione in corso…';
+            status.className = 'status';
+
+            try {
+                const res = await fetch('/api/promo/publish', { method: 'POST', body: formData });
+                const data = await res.json().catch(() => ({}));
+
+                if (!res.ok) {
+                    throw new Error(data.error || `Errore (${res.status})`);
+                }
+
+                status.textContent = 'Pagina pubblicata con successo.';
+                status.className = 'status ok';
+                input.value = '';
+                loadBackups();
+            } catch (err) {
+                status.textContent = err.message;
+                status.className = 'status error';
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        loadBackups();
+    </script>
+</body>
+</html>

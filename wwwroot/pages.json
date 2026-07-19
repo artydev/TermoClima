@@ -1,0 +1,18 @@
+{
+  "chiSiamo": {
+    "eyebrow": "La nostra storia",
+    "title": "Chi Siamo",
+    "body": [
+      "TermoClima Srl è un'azienda specializzata nella vendita e installazione di stufe a pellet e sistemi di riscaldamento.",
+      "Da anni al servizio delle famiglie italiane con soluzioni efficienti e affidabili, operiamo con due punti vendita ad Sassoferrato (AN) e Fossato di Vico (PG)."
+    ]
+  },
+  "assistenza": {
+    "eyebrow": "Supporto tecnico",
+    "title": "Assistenza",
+    "body": [
+      "Il nostro team tecnico è a disposizione per manutenzione, riparazioni e consulenza sui tuoi impianti di riscaldamento.",
+      "Offriamo interventi rapidi, contratti di manutenzione programmata e assistenza post-vendita su tutti i prodotti."
+    ]
+  }
+}

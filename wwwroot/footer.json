@@ -1,0 +1,40 @@
+{
+  "legal": {
+    "company": "TermoClima Srl",
+    "vatNumber": "P.IVA 01234567890",
+    "privacyPolicyUrl": "#privacy-policy",
+    "cookiePolicyUrl": "#cookie-policy"
+  },
+  "stores": [
+    {
+      "name": "TERMOCLIMA SRL",
+      "addressLine1": "Via Bruno Buozzi, 40/A",
+      "addressLine2": "60041 Sassoferrato (AN)",
+      "tel": "0732 770238",
+      "telHref": "tel:+390732770238",
+      "cell": "378 4400180",
+      "cellHref": "tel:+393784400180",
+      "hoursTitle": "ORARI DI APERTURA",
+      "hours": [
+        { "day": "Lunedì - Venerdì", "time": "09:00 - 13:00, 15:00 - 19:30" },
+        { "day": "Sabato",           "time": "09:00 - 13:30" },
+        { "day": "Domenica",         "time": "Chiuso" }
+      ]
+    },
+    {
+      "name": "TERMOCLIMA SRL",
+      "addressLine1": "Via del Rigo, 32",
+      "addressLine2": "06022 Fossato di Vico (PG)",
+      "tel": "075 8630134",
+      "telHref": "tel:+390758630134",
+      "cell": "392 2882315",
+      "cellHref": "tel:+393922882315",
+      "hoursTitle": "ORARI DI APERTURA",
+      "hours": [
+        { "day": "Lunedì - Venerdì", "time": "09:00 - 13:00, 15:00 - 19:30" },
+        { "day": "Sabato",           "time": "09:00 - 13:30" },
+        { "day": "Domenica",         "time": "Chiuso" }
+      ]
+    }
+  ]
+}

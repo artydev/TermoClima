@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gestione Prodotti - Forest Green Palette</title>
+
+<style>:root {
+	--accent: #1b5e20;
+	--accent-hover: #144a18;
+	--accent-light: #e8f5e9;
+	--muted: #6c757d;
+	--border-color: #e9ecef;
+	--bg-main: #f8f9fa;
+	--bg-sidebar: #ffffff;
+	font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+}
+
+body {
+	margin: 0;
+	background: var(--bg-main);
+	color: #343a40;
+	display: flex;
+	height: 100vh;
+	overflow: hidden;
+}
+
+h1 {
+	font-size: 1.25rem;
+	margin: 0 0 10px;
+	font-weight: 600;
+	text-align: center;
+	margin-bottom: 2rem;
+}
+
+h3 {
+	color: var(--accent);
+	border-bottom: 2px solid var(--accent-light);
+	padding-bottom: 5px;
+	margin-top: 20px;
+	margin-bottom: 15px;
+}
+
+.small {
+	font-size: 0.8rem;
+	color: var(--muted);
+}
+
+.flex {
+	display: flex;
+	gap: 10px;
+}
+
+.container {
+	display: flex;
+	width: 100%;
+}
+
+.sidebar {
+	width: 360px;
+	background: var(--bg-sidebar);
+	padding: 15px;
+	border-right: 1px solid var(--border-color);
+	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.list-controls {
+	margin-bottom: 15px;
+}
+
+#list {
+	flex-grow: 1;
+	overflow-y: auto;
+	padding-right: 5px;
+}
+
+.sidebar-footer {
+	margin-top: 15px;
+	padding-top: 10px;
+	border-top: 1px solid var(--border-color);
+}
+
+.main-content {
+	flex-grow: 1;
+	padding: 20px 25px;
+	overflow-y: auto;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.form-header-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 15px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid var(--border-color);
+}
+
+#formTitle b {
+	font-size: 1.15rem;
+	color: #212529;
+}
+
+.product-item {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	padding: 10px;
+	border-radius: 6px;
+	cursor: pointer;
+	border: 1px solid transparent;
+	margin-bottom: 4px;
+	transition: background-color 0.15s, border-color 0.15s;
+}
+
+.product-item:hover {
+	background: var(--accent-light);
+}
+
+.product-item.selected {
+	background: var(--accent-light);
+	border-color: var(--accent);
+	box-shadow: 0 0 0 1px var(--accent);
+}
+
+img.thumb {
+	width: 40px;
+	height: 40px;
+	object-fit: cover;
+	border-radius: 4px;
+	border: 1px solid #eee;
+	flex-shrink: 0;
+}
+
+.meta b {
+	display: block;
+	font-size: 0.95rem;
+	color: #343a40;
+}
+
+.field {
+	margin-bottom: 15px;
+}
+
+label {
+	display: block;
+	font-size: 0.85rem;
+	margin-bottom: 5px;
+	color: var(--muted);
+	font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+	width: 100%;
+	padding: 10px 12px;
+	border-radius: 6px;
+	border: 1px solid var(--border-color);
+	box-sizing: border-box;
+	font-size: 1rem;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+textarea:focus {
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.25);
+	outline: none;
+}
+
+.side-group {
+	padding: 15px;
+	border-radius: 8px;
+	background: #ffffff;
+	border: 1px solid var(--border-color);
+	margin-bottom: 20px;
+}
+
+.specs,
+.pack-list {
+	background: var(--accent-light);
+	padding: 10px;
+	border-radius: 6px;
+	margin-top: 5px;
+}
+
+.img-preview-container {
+	padding: 10px;
+	border: 1px dashed var(--border-color);
+	border-radius: 6px;
+	text-align: center;
+}
+
+.img-preview {
+	width: 100%;
+	max-width: 250px;
+	height: auto;
+	object-fit: cover;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+	display: block;
+	margin: 0 auto;
+}
+
+pre {
+	background: #212529;
+	color: #e9ecef;
+	padding: 15px;
+	border-radius: 8px;
+	overflow: auto;
+	white-space: pre-wrap;
+	font-size: 0.9rem;
+	margin-top: 10px;
+}
+
+button {
+	background: var(--accent);
+	color: #fff;
+	padding: 10px 15px;
+	border-radius: 6px;
+	border: 0;
+	cursor: pointer;
+	font-weight: 600;
+	transition: background-color 0.2s, transform 0.1s;
+	flex-shrink: 0;
+}
+
+button:hover {
+	background: var(--accent-hover);
+}
+
+button.ghost {
+	background: transparent;
+	color: var(--accent);
+	border: 1px solid var(--accent);
+}
+
+button.ghost:hover {
+	background: var(--accent-light);
+}
+
+button.danger {
+	background: #dc3545;
+}
+
+button.danger:hover {
+	background: #c82333;
+}
+
+button.muted {
+	background: #f1f3f5;
+	color: #333;
+	border: 1px solid #dcdfe3;
+}
+
+button.muted:hover {
+	background: #e2e6ea;
+}
+
+.spec-row button.ghost,
+.pack-row button.ghost {
+	border: none;
+	color: var(--muted);
+	font-size: 1.1rem;
+	padding: 4px 6px;
+}
+
+.spec-row button.ghost:hover,
+.pack-row button.ghost:hover {
+	color: #dc3545;
+	background: transparent;
+}
+
+@media(max-width:1000px){
+  body {
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .container {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Product list (sidebar) visible on top, scrollable */
+  .sidebar {
+    width: 100%;
+    max-height: 50vh; /* takes top half of viewport */
+    overflow-y: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    background: var(--bg-sidebar);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  /* Make product list scroll within sidebar */
+  #list {
+    overflow-y: auto;
+    max-height: calc(50vh - 150px);
+    padding-right: 6px;
+  }
+
+  /* Main content (edit form) below products */
+  .main-content {
+    width: 100%;
+    max-width: 100%;
+    padding: 15px;
+    flex-grow: 1;
+    overflow: visible;
+    background: var(--bg-main);
+  }
+
+  /* Improve touch spacing */
+  .product-item {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  button {
+    padding: 10px 14px;
+  }
+
+  input, textarea {
+    font-size: 1rem;
+  }
+}
+</style></head>
+<body>
+<div class="container">
+  <aside class="sidebar" id="leftPanel">
+     <h1>Gestione Prodotti &#x1F332;</h1>
+    <div class="flex list-controls" style="justify-content: space-around;">
+      <button id="btnNew">+ Nuovo Prodotto</button>
+      <button id="btnExport" class="ghost">Esporta</button>
+      <button id="btnImport" class="ghost">Importa</button>
+      <input id="fileInput" type="file" accept=".json" style="display:none">
+    </div>
+    <div class="field">
+      <input id="search" type="text" placeholder="Cerca per nome, id o certificato...">
+    </div>
+    <div id="list"></div>
+    <div class="sidebar-footer small">
+      <a href="https://mockapi.io/projects/68fe03397c700772bb128815">I dati sono gestiti tramite MockAPI.io</a><br>
+    </div>
+  </aside>
+
+  <main class="main-content" id="mainPanel">
+    <div id="formHeader" class="form-header-bar">
+      <div id="formTitle"><b>Seleziona un prodotto o clicca Nuovo Prodotto</b></div>
+      <div id="lastSaved" class="small"></div>
+    </div>
+
+    <form id="form" style="display:none">
+      <div class="field"><label>ID</label><input id="input_id" type="text"></div>
+      <div class="field"><label>Nome</label><input id="input_name" type="text"></div>
+      <div class="field"><label>Descrizione</label><textarea id="input_description"></textarea></div>
+      <div class="flex"><div class="field" style="flex:1"><label>Prezzo</label><input id="input_price" type="number" step="0.01"></div>
+      <div class="field" style="width:90px"><label>Valuta</label><input id="input_currency" type="text"></div></div>
+      <div class="field"><label>Certificato</label><input id="input_certificate" type="text"></div>
+
+      <div class="side-group">
+        <h3>Media &amp; Logistica</h3>
+        <div class="field"><label>URL Immagine</label><input id="input_image_url" type="text"><div class="img-preview-container"><img id="imgPreview" class="img-preview" src></div></div>
+        <div class="field"><label>Disponibilit&#xE0;</label><input id="input_availability" type="text"></div>
+        <div class="field"><label>Consegna</label><input id="input_delivery" type="text"></div>
+        <div class="field"><label>Pagamento</label><input id="input_payment" type="text"></div>
+      </div>
+
+      <div class="side-group" id="dimensionsGroup">
+        <h3>Dimensioni (solo legno)</h3>
+        <div class="field"><label>Lunghezza</label><input id="input_length" type="text"></div>
+        <div class="field"><label>Larghezza</label><input id="input_width" type="text"></div>
+        <div class="field"><label>Altezza</label><input id="input_height" type="text"></div>
+      </div>
+
+      <div class="side-group">
+        <h3>Dati Tecnici</h3>
+        <div class="field"><label>Specifiche</label><div id="specs" class="specs"></div><div style="text-align:right;margin-top:6px"><button type="button" id="addSpec" class="ghost small">+ Aggiungi specifica</button></div></div>
+        <div class="field"><label>Confezionamento</label><div id="packs" class="pack-list"></div><div style="text-align:right;margin-top:6px"><button type="button" id="addPack" class="ghost small">+ Aggiungi confezione</button></div></div>
+      </div>
+
+      <div class="flex" style="gap:10px;margin-top:10px;padding-top:15px;border-top:1px solid var(--border-color);">
+        <button id="btnSave">Salva</button>
+        <button type="button" id="btnDelete" class="danger">Elimina</button>
+        <button type="button" id="btnClear" class="muted">Reset campi</button>
+      </div>
+    </form>
+
+    <div id="empty" class="small" style="padding:20px;">Nessun prodotto selezionato. Scegline uno a sinistra o clicca &quot;Nuovo Prodotto&quot;.</div>
+
+    <h3 style="margin-top:20px;">JSON Grezzo</h3>
+    <pre id="rawOut">{}</pre>
+  </main>
+</div>
+
+ <script>// ====================
+// API MODULE
+// Handles backend interactions
+// ====================
+const API = (() => {
+  const BASE = "/products";
+
+  const fetchAll = async () => {
+    const res = await fetch(BASE);
+    return res.json();
+  };
+
+  const save = async (product, isUpdate = false) => {
+    const url = isUpdate ? `${BASE}/${product.id}` : BASE;
+    const method = isUpdate ? "PUT" : "POST";
+    await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(product),
+    });
+  };
+
+  const remove = async (id) => {
+    await fetch(`${BASE}/${id}`, { method: "DELETE" });
+  };
+
+  return { fetchAll, save, remove };
+})();
+
+// ====================
+// UI MODULE
+// Template-based rendering and DOM helpers
+// ====================
+const UI = (() => {
+  const $ = (id) => document.getElementById(id);
+
+  const renderList = (products, selectedIndex = null, filter = "") => {
+    const list = $("list");
+    const q = filter.trim().toLowerCase();
+
+    list.innerHTML = products
+      .map((p, i) => {
+        if (q && !`${p.id || ""} ${p.name || ""} ${p.certificate || ""}`.toLowerCase().includes(q)) return "";
+        return `
+          <div class="product-item${i === selectedIndex ? " selected" : ""}" onclick="Controller.selectProduct(${i})">
+            <img class="thumb" src="${p.image_url || ""}" onerror="this.src='';this.style.background='#f4f4f4'"/>
+            <div class="meta">
+              <b>${p.name || "(senza nome)"}</b>
+              <div class="small">ID: ${p.id || "-"}</div>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+  };
+
+  const fillForm = (p) => {
+    $("form").style.display = "block";
+    $("empty").style.display = "none";
+
+    const fields = [
+      "id","name","description","price","currency",
+      "certificate","image_url","availability","delivery","payment",
+      "length","width","height"
+    ];
+    fields.forEach(f => {
+      const el = $("input_" + f);
+      if (el) el.value = p[f] ?? p.dimensions?.[f] ?? "";
+    });
+
+    $("imgPreview").src = p.image_url || "";
+
+    renderSpecs(p.specifications);
+    renderPacks(p.packaging);
+    updateRawOutput(p);
+  };
+
+  const renderSpecs = (specs = {}) => {
+    $("specs").innerHTML = Object.entries(specs || {})
+      .map(([k, v]) => `
+        <div class="spec-row flex">
+          <input type="text" class="spec-label" value="${k}" placeholder="Etichetta"/>
+          <input type="text" class="spec-value" value="${v}" placeholder="Valore"/>
+          <button class="ghost" onclick="Controller.removeSpecRow(this)">✕</button>
+        </div>
+      `).join("");
+  };
+
+  const renderPacks = (packs = []) => {
+    $("packs").innerHTML = (packs || [])
+      .map(v => `
+        <div class="pack-row flex">
+          <input type="text" placeholder="Pacchetto" value="${v}"/>
+          <button class="ghost" onclick="Controller.removePackRow(this)">✕</button>
+        </div>
+      `).join("");
+  };
+
+  const addSpecRow = () => {
+    $("specs").insertAdjacentHTML("beforeend", `
+      <div class="spec-row flex">
+        <input type="text" class="spec-label" placeholder="Etichetta"/>
+        <input type="text" class="spec-value" placeholder="Valore"/>
+        <button class="ghost" onclick="Controller.removeSpecRow(this)">✕</button>
+      </div>
+    `);
+  };
+
+  const addPackRow = () => {
+    $("packs").insertAdjacentHTML("beforeend", `
+      <div class="pack-row flex">
+        <input type="text" placeholder="Pacchetto"/>
+        <button class="ghost" onclick="Controller.removePackRow(this)">✕</button>
+      </div>
+    `);
+  };
+
+  const updateRawOutput = (obj) => {
+    $("rawOut").textContent = JSON.stringify(obj, null, 2);
+  };
+
+  return { $, renderList, fillForm, renderSpecs, renderPacks, addSpecRow, addPackRow, updateRawOutput };
+})();
+
+// ====================
+// CONTROLLER MODULE
+// Handles events, selection, reactive updates
+// ====================
+const Controller = (() => {
+  let products = [];
+  let selectedIndex = null;
+  const { $ } = UI;
+
+  const loadProducts = async () => {
+    products = await API.fetchAll();
+    UI.renderList(products, selectedIndex, $("search").value);
+  };
+
+  const selectProduct = (i) => {
+    selectedIndex = i;
+    UI.renderList(products, selectedIndex, $("search").value);
+    UI.fillForm(products[i]);
+    makeReactive();
+  };
+
+  // 🧩 Fix: Always include packaging/specifications when empty
+  const gatherForm = () => {
+    const p = {};
+    const fields = [
+      "id","name","description","price","currency",
+      "certificate","image_url","availability","delivery","payment"
+    ];
+    fields.forEach(f => p[f] = ($("input_" + f).value ?? "").trim());
+    if (p.price) p.price = Number(p.price);
+
+    const dims = {
+      length: $("input_length").value,
+      width: $("input_width").value,
+      height: $("input_height").value
+    };
+    if (dims.length || dims.width || dims.height) p.dimensions = dims;
+
+    const specs = {};
+    $("specs").querySelectorAll(".spec-row").forEach(row => {
+      const k = row.querySelector(".spec-label")?.value.trim();
+      const v = row.querySelector(".spec-value")?.value.trim();
+      if (k && v) specs[k] = v;
+    });
+    // 👇 Always send an empty object if none
+    p.specifications = Object.keys(specs).length ? specs : {};
+
+    const packs = Array.from($("packs").querySelectorAll("input"))
+                       .map(i => i.value)
+                       .filter(i => i);
+    // 👇 Always send an empty array if none
+    p.packaging = packs.length ? packs : [];
+
+    return p;
+  };
+
+  const makeReactive = () => {
+    if (selectedIndex === null) return;
+    const p = products[selectedIndex];
+
+    const simpleFields = ["name","description","price","currency","certificate","image_url","availability","delivery","payment"];
+    simpleFields.forEach(f => {
+      const el = $("input_" + f);
+      if (!el) return;
+      el.oninput = () => {
+        p[f] = el.value.trim();
+        if (f === "price") p.price = el.value ? Number(el.value) : "";
+        $("imgPreview").src = p.image_url || "";
+        UI.updateRawOutput(p);
+        UI.renderList(products, selectedIndex, $("search").value);
+      };
+    });
+
+    ["length","width","height"].forEach(f => {
+      const el = $("input_" + f);
+      if (!el) return;
+      el.oninput = () => {
+        if (!p.dimensions) p.dimensions = {};
+        p.dimensions[f] = el.value;
+        UI.updateRawOutput(p);
+        UI.renderList(products, selectedIndex, $("search").value);
+      };
+    });
+  };
+
+  // 🧠 When deleting specification rows
+  const removeSpecRow = (btn) => {
+    btn.parentNode.remove();
+    const p = products[selectedIndex];
+    const specs = {};
+    $("specs").querySelectorAll(".spec-row").forEach(r => {
+      const k = r.querySelector(".spec-label")?.value.trim();
+      const v = r.querySelector(".spec-value")?.value.trim();
+      if (k && v) specs[k] = v;
+    });
+    p.specifications = Object.keys(specs).length ? specs : {};
+    UI.updateRawOutput(p);
+  };
+
+  // 🧠 When deleting packaging rows
+  const removePackRow = (btn) => {
+    btn.parentNode.remove();
+    const p = products[selectedIndex];
+    const packs = Array.from($("packs").querySelectorAll("input"))
+                       .map(i => i.value).filter(i => i);
+    p.packaging = packs.length ? packs : [];
+    UI.updateRawOutput(p);
+  };
+
+  const initEvents = () => {
+    $("search").addEventListener("input", () => UI.renderList(products, selectedIndex, $("search").value));
+    $("input_image_url").addEventListener("input", () => $("imgPreview").src = $("input_image_url").value);
+
+    $("btnNew").onclick = () => {
+      selectedIndex = null;
+      $("form").style.display = "block";
+      $("empty").style.display = "none";
+      $("formTitle").innerHTML = "<b>Nuovo prodotto</b>";
+      $("form").reset();
+      $("specs").innerHTML = "";
+      $("packs").innerHTML = "";
+      $("input_id").focus();
+    };
+
+    $("btnSave").onclick = async (e) => {
+      e.preventDefault();
+      const p = gatherForm();
+      if (!p.id) return alert("ID obbligatorio");
+      await API.save(p, selectedIndex !== null);
+      await loadProducts();
+      alert("Prodotto salvato");
+    };
+
+    $("btnDelete").onclick = async () => {
+      if (selectedIndex === null) return alert("Nessun prodotto selezionato");
+      if (!confirm("Eliminare questo prodotto?")) return;
+      await API.remove(products[selectedIndex].id);
+      selectedIndex = null;
+      $("form").style.display = "none";
+      $("empty").style.display = "block";
+      await loadProducts();
+      alert("Prodotto eliminato");
+    };
+
+    $("btnExport").onclick = async () => {
+      const data = await API.fetchAll();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "products.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+    };
+
+    $("btnImport").onclick = () => $("fileInput").click();
+    $("fileInput").addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const imported = JSON.parse(await file.text());
+      for (const p of imported) await API.save(p);
+      await loadProducts();
+      alert("Importazione completata");
+    });
+
+    $("btnClear").onclick = () => $("form").reset();
+    $("addSpec").onclick = UI.addSpecRow;
+    $("addPack").onclick = UI.addPackRow;
+  };
+
+  return { loadProducts, selectProduct, initEvents, removeSpecRow, removePackRow };
+})();
+
+// ====================
+// INITIALIZE APP
+// ====================
+Controller.initEvents();
+Controller.loadProducts();
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://us-east-1.tixte.net" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <title>TermoClima — Prodotti</title>
+</head>
+<body>
+  <div id="header-root"></div>
+
+  <main class="main" id="top">
+    <div class="view">
+      <header class="hero">
+        <p class="eyebrow eyebrow-hero">Catalogo completo</p>
+        <h1 class="hero-title">Attrezzatura per ogni stagione</h1>
+        <p class="hero-copy">Sfoglia tutto il catalogo disponibile e aggiungi al carrello ciò che ti serve.</p>
+      </header>
+
+      <nav class="filter-row" id="filter-row" aria-label="Filtra per categoria"></nav>
+
+      <div id="catalog-state"></div>
+      <div class="grid" id="product-grid"></div>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+
+  <script type="module" src="./assets/js/pages/catalog-page.js"></script>
+</body>
+</html>

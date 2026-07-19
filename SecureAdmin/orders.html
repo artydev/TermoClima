@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Ordini | Admin</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --danger: #ef4444;
+            --good: #16a34a;
+            --warn: #d97706;
+            --bg: #f9fafb;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            padding: 2rem;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .order-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .order-id {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .order-customer {
+            font-weight: 600;
+        }
+
+        .order-meta {
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin: 0.15rem 0;
+        }
+
+        select.status-select {
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        [data-status="In attesa"] { color: var(--warn); }
+        [data-status="Confermato"] { color: var(--primary); }
+        [data-status="Consegnato"] { color: var(--good); }
+        [data-status="Annullato"] { color: var(--danger); }
+
+        .order-items {
+            margin: 1rem 0;
+            border-top: 1px solid #f0f1f3;
+            border-bottom: 1px solid #f0f1f3;
+            padding: 0.75rem 0;
+        }
+
+        .order-item-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .order-notes {
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: #4b5563;
+            background: #f9fafb;
+            border-radius: 6px;
+            padding: 0.6rem 0.75rem;
+        }
+
+        .order-actions {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 0.4rem 0.85rem;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.82rem;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .empty-note {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p><a href="/admin/dashboard">← Torna alla dashboard</a></p>
+        <h1>Ordini</h1>
+        <div id="orderList"><p class="empty-note">Caricamento…</p></div>
+    </div>
+
+    <script>
+        const STATUSES = ['In attesa', 'Confermato', 'Consegnato', 'Annullato'];
+
+        function formatDate(iso) {
+            if (!iso) return '';
+            const d = new Date(iso);
+            if (isNaN(d)) return iso;
+            return d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) +
+                   ' alle ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function formatPrice(n) {
+            const num = Number(n) || 0;
+            return `€${num.toFixed(2)}`;
+        }
+
+        function orderCardHTML(order) {
+            const items = Array.isArray(order.items) ? order.items : [];
+            const itemsHTML = items.map(item => `
+                <div class="order-item-row">
+                    <span>${item.qty}x ${item.name}</span>
+                    <span>${formatPrice((item.price || 0) * (item.qty || 0))}</span>
+                </div>
+            `).join('');
+
+            const statusOptions = STATUSES.map(s =>
+                `<option value="${s}" ${s === order.status ? 'selected' : ''}>${s}</option>`
+            ).join('');
+
+            const address = [order.address, order.city, order.postalCode].filter(Boolean).join(', ');
+
+            return `
+                <div class="order-card" id="order-${order.id}">
+                    <div class="order-head">
+                        <div>
+                            <div class="order-id">Ordine #${order.id}</div>
+                            <div class="order-customer">${order.customerName || ''}</div>
+                            <p class="order-meta">${order.email || ''}${order.phone ? ' · ' + order.phone : ''}</p>
+                            <p class="order-meta">${formatDate(order.createdAt)}</p>
+                            <p class="order-meta">${order.deliveryMethod || ''}${address ? ' — ' + address : ''}</p>
+                        </div>
+                        <select class="status-select" data-status="${order.status || ''}" onchange="updateStatus('${order.id}', this.value)">
+                            ${statusOptions}
+                        </select>
+                    </div>
+
+                    <div class="order-items">
+                        ${itemsHTML || '<p class="empty-note">Nessun articolo.</p>'}
+                        <div class="order-total">
+                            <span>Totale</span>
+                            <span>${formatPrice(order.subtotal)}</span>
+                        </div>
+                    </div>
+
+                    ${order.notes ? `<div class="order-notes">Note: ${order.notes}</div>` : ''}
+
+                    <div class="order-actions">
+                        <button class="btn-danger" onclick="deleteOrder('${order.id}')">Elimina</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadOrders() {
+            const container = document.getElementById('orderList');
+            try {
+                const res = await fetch('/api/orders');
+                if (!res.ok) throw new Error(`Errore (${res.status})`);
+                const orders = await res.json();
+
+                if (!orders.length) {
+                    container.innerHTML = '<p class="empty-note">Nessun ordine ricevuto finora.</p>';
+                    return;
+                }
+
+                // Most recent first.
+                orders.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+                container.innerHTML = orders.map(orderCardHTML).join('');
+            } catch (err) {
+                container.innerHTML = `<p class="empty-note">Impossibile caricare gli ordini: ${err.message}</p>`;
+            }
+        }
+
+        async function updateStatus(id, newStatus) {
+            const res = await fetch(`/api/orders/${id}`);
+            if (!res.ok) { alert('Impossibile leggere l\u2019ordine.'); loadOrders(); return; }
+            const order = await res.json();
+
+            const putRes = await fetch(`/api/orders/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...order, status: newStatus }),
+            });
+
+            if (!putRes.ok) {
+                alert('Aggiornamento stato non riuscito.');
+                loadOrders();
+                return;
+            }
+
+            const selectEl = document.querySelector(`#order-${id} .status-select`);
+            if (selectEl) selectEl.dataset.status = newStatus;
+        }
+
+        async function deleteOrder(id) {
+            if (!confirm('Eliminare questo ordine?')) return;
+            const res = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                document.getElementById(`order-${id}`)?.remove();
+            } else {
+                alert('Eliminazione non riuscita.');
+            }
+        }
+
+        loadOrders();
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+﻿<html>
+<head>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+
+        .login-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <div class='login-card'>
+        <h3>Admin Access</h3>
+        <form method="POST" action="/login" id="loginForm">
+            <input type="hidden" name="ReturnUrl" id="returnUrlInput" />
+
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required />
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <script>
+    // This grabs the ReturnUrl from the URL and puts it into the hidden field
+    const urlParams = new URLSearchParams(window.location.search);
+    document.getElementById('returnUrlInput').value = urlParams.get('ReturnUrl') || '/admin/dashboard';
+    </script>
+</body>
+</html>

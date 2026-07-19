@@ -1,0 +1,90 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <!--
+    These paths hold live, server-managed data — the products/orders database,
+    admin-uploaded product images, and promo page backups — not source content.
+    They must never be overwritten or deleted by a redeploy.
+
+    First deployment only: db.json needs to be uploaded once manually (FTP or
+    the hosting Control Panel's file manager) so the real product catalog is
+    there from the start — Database.cs will otherwise start with empty tables
+    rather than crash, but you still want your real 34 products there, not a
+    blank catalog. After that first upload, db.json is permanently excluded
+    from publishes below, so the live version (with real orders and any admin
+    edits) is never clobbered by a later `dotnet publish`.
+
+    CopyToPublishDirectory="Never" stops these from being re-uploaded from the
+    local project on every publish. The MsDeploySkipRules below are a second
+    layer specifically for Web Deploy's "Remove additional files at
+    destination" option, which (if enabled) deletes anything on the server
+    that isn't part of the current publish payload — these rules tell it not
+    to touch these paths even though they're intentionally excluded above.
+    No SkipAction element here — it isn't part of this schema at all (that's
+    only valid in the separate msdeploy.exe CLI -skip: syntax); without it,
+    a rule skips every operation for matching paths, which is what we want.
+    The reliable, zero-risk alternative is simply leaving "Remove additional
+    files at destination" UNCHECKED in your publish profile, which makes this
+    whole skip-rules block unnecessary either way.
+  -->
+  <ItemGroup>
+    <Content Update="db.json" CopyToPublishDirectory="Never" />
+    <Content Update="wwwroot\uploads\**" CopyToPublishDirectory="Never" />
+
+    <MsDeploySkipRules Include="SkipDeleteDbJson">
+      <ObjectName>filePath</ObjectName>
+      <AbsolutePath>db\.json</AbsolutePath>
+      <Apply>Destination</Apply>
+    </MsDeploySkipRules>
+
+    <MsDeploySkipRules Include="SkipDeleteUploadsFolder">
+      <ObjectName>dirPath</ObjectName>
+      <AbsolutePath>wwwroot\\uploads</AbsolutePath>
+      <Apply>Destination</Apply>
+    </MsDeploySkipRules>
+    <MsDeploySkipRules Include="SkipDeleteUploadsFiles">
+      <ObjectName>filePath</ObjectName>
+      <AbsolutePath>wwwroot\\uploads\\.*</AbsolutePath>
+      <Apply>Destination</Apply>
+    </MsDeploySkipRules>
+
+    <MsDeploySkipRules Include="SkipDeletePromoBackupsFolder">
+      <ObjectName>dirPath</ObjectName>
+      <AbsolutePath>PromoBackups</AbsolutePath>
+      <Apply>Destination</Apply>
+    </MsDeploySkipRules>
+    <MsDeploySkipRules Include="SkipDeletePromoBackupsFiles">
+      <ObjectName>filePath</ObjectName>
+      <AbsolutePath>PromoBackups\\.*</AbsolutePath>
+      <Apply>Destination</Apply>
+    </MsDeploySkipRules>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="SecureAdmin\dashboard.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SecureAdmin\image-manager.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SecureAdmin\login.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SecureAdmin\orders.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SecureAdmin\publish-promo.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
