@@ -1,7 +1,8 @@
+using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 using System.Text.Json;
-using Microsoft.Extensions.Options;
+using System.Xml.Linq;
 
 namespace JsonServer
 {
@@ -70,7 +71,7 @@ namespace JsonServer
                 From = new MailAddress(_settings.FromAddress, _settings.FromName),
                 Subject = $"Nuovo ordine – TermoClima (#{orderId})",
                 Body = body,
-                IsBodyHtml = false,
+                IsBodyHtml = true,
             };
             message.To.Add(_settings.ToAddress);
 
@@ -115,6 +116,10 @@ namespace JsonServer
         {
             string Field(string key) => order.TryGetValue(key, out var v) ? v?.ToString() ?? "" : "";
 
+            // deserialize to List<InquiryItem>
+            var items = JsonSerializer.Deserialize<List<InquiryItem>>(Field("items")) as List<InquiryItem>;   //   Field("items") ;
+
+
             var lines = new List<string>
             {
                 $"Nuovo ordine ricevuto — #{Field("id")}",
@@ -128,17 +133,14 @@ namespace JsonServer
                 "Prodotti:",
             };
 
-            if (order.TryGetValue("items", out var itemsObj) && itemsObj is JsonElement itemsEl && itemsEl.ValueKind == JsonValueKind.Array)
+           
+            
+            foreach (var item in items)
             {
-                foreach (var item in itemsEl.EnumerateArray())
-                {
-                    var name = item.TryGetProperty("name", out var n) ? n.GetString() : "";
-                    var qty = item.TryGetProperty("qty", out var q) ? q.GetInt32() : 0;
-                    var price = item.TryGetProperty("price", out var p) ? p.GetDecimal() : 0m;
-                    var currency = item.TryGetProperty("currency", out var c) ? c.GetString() ?? "€" : "€";
-                    lines.Add($"  {qty}x {name} ({currency}{price:0.00} cad.) — {currency}{price * qty:0.00}");
-                }
+               
+                lines.Add($"  {item.Qty}x {item.Name} ({item.Currency}{item.Price:0.00} cad.) — {item.Currency}{item.Price * item.Qty:0.00}");
             }
+            
 
             lines.Add("");
             lines.Add($"Totale: €{Field("subtotal")}");

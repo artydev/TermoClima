@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
@@ -38,6 +38,9 @@
     whole skip-rules block unnecessary either way.
   -->
   <ItemGroup>
+    <Content Update="Data\db.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
     <Content Update="db.json" CopyToPublishDirectory="Never" />
     <Content Update="wwwroot\uploads\**" CopyToPublishDirectory="Never" />
 

@@ -1,4 +1,30 @@
 {
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Smtp__HOST": "smtp.laposte.net",
+        "Smtp__Port": "587",
+        "Smtp__EnableSsl": "true",
+        "Smtp__User": "salve.didio@laposte.net",
+        "Smtp__Password": "123Soleil!789Panier9!",
+        "Smtp__FromAddress": "salve.didio@laposte.net",
+        "Smtp__FromName": "TermoClima",
+        "Smtp__ToAddress": "salve.didio@laposte.net"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5023"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  },
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -6,24 +32,6 @@
     "iisExpress": {
       "applicationUrl": "http://localhost:44166",
       "sslPort": 0
-    }
-  },
-  "profiles": {
-    "http": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-            "applicationUrl": "http://localhost:5023",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-            "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
     }
   }
 }
