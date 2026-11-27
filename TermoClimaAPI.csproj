@@ -75,6 +75,17 @@
       <AbsolutePath>PromoBackups\\.*</AbsolutePath>
       <Apply>Destination</Apply>
     </MsDeploySkipRules>
+
+    <MsDeploySkipRules Include="SkipDeleteAssistenzaBackupsFolder">
+      <ObjectName>dirPath</ObjectName>
+      <AbsolutePath>AssistenzaBackups</AbsolutePath>
+      <Apply>Destination</Apply>
+    </MsDeploySkipRules>
+    <MsDeploySkipRules Include="SkipDeleteAssistenzaBackupsFiles">
+      <ObjectName>filePath</ObjectName>
+      <AbsolutePath>AssistenzaBackups\\.*</AbsolutePath>
+      <Apply>Destination</Apply>
+    </MsDeploySkipRules>
   </ItemGroup>
   <ItemGroup>
     <None Update="SecureAdmin\dashboard.html">
@@ -90,6 +101,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="SecureAdmin\publish-promo.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SecureAdmin\publish-assistenza.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

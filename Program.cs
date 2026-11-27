@@ -89,5 +89,6 @@ app.MapAuthEndpoints();
 app.MapMediaEndpoints();
 app.MapInquiryEndpoints();
 app.MapPromoEndpoints();
+app.MapAssistenzaEndpoints();
 
 app.Run();
