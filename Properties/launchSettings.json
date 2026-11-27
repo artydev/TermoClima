@@ -4,15 +4,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "Smtp__HOST": "smtp.laposte.net",
-        "Smtp__Port": "587",
-        "Smtp__EnableSsl": "true",
-        "Smtp__User": "salve.didio@laposte.net",
-        "Smtp__Password": "123Soleil!789Panier9!",
-        "Smtp__FromAddress": "salve.didio@laposte.net",
-        "Smtp__FromName": "TermoClima",
-        "Smtp__ToAddress": "salve.didio@laposte.net"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5023"
