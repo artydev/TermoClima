@@ -48,9 +48,29 @@
     <Content Update="db.json" CopyToPublishDirectory="Never" />
     <Content Update="wwwroot\uploads\**" CopyToPublishDirectory="Never" />
 
+    <!--
+      Pages published from the admin (/admin/promo, /admin/assistenza) live in
+      wwwroot and are replaced at runtime. Excluding them from publishes keeps a
+      redeploy from reverting them to the repo version. They must already exist on
+      the server (they do); for a brand-new server, upload both files once by hand.
+    -->
+    <Content Update="wwwroot\promozione.html" CopyToPublishDirectory="Never" />
+    <Content Update="wwwroot\assistenza.html" CopyToPublishDirectory="Never" />
+
     <MsDeploySkipRules Include="SkipDeleteDbJson">
       <ObjectName>filePath</ObjectName>
       <AbsolutePath>db\.json</AbsolutePath>
+      <Apply>Destination</Apply>
+    </MsDeploySkipRules>
+
+    <MsDeploySkipRules Include="SkipDeletePromozioneHtml">
+      <ObjectName>filePath</ObjectName>
+      <AbsolutePath>wwwroot\\promozione\.html</AbsolutePath>
+      <Apply>Destination</Apply>
+    </MsDeploySkipRules>
+    <MsDeploySkipRules Include="SkipDeleteAssistenzaHtml">
+      <ObjectName>filePath</ObjectName>
+      <AbsolutePath>wwwroot\\assistenza\.html</AbsolutePath>
       <Apply>Destination</Apply>
     </MsDeploySkipRules>
 
