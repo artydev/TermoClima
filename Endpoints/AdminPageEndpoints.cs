@@ -1,10 +1,8 @@
-﻿namespace JsonServer.Endpoints
+namespace JsonServer.Endpoints
 {
     /// <summary>
     /// Serves the SecureAdmin/*.html pages, gated behind the same cookie
-    /// authentication as the admin APIs (/api/promo). Note /api/media is
-    /// NOT currently behind RequireAuthorization() — a pre-existing gap,
-    /// unchanged by this refactor.
+    /// authentication as the admin APIs (/api/promo, /api/assistenza, /api/media).
     /// </summary>
     public static class AdminPageEndpoints
     {
@@ -15,6 +13,7 @@
             adminGroup.MapGet("/dashboard", (HttpContext ctx) => ServeAdminPage(ctx, "dashboard.html"));
             adminGroup.MapGet("/images", (HttpContext ctx) => ServeAdminPage(ctx, "image-manager.html"));
             adminGroup.MapGet("/promo", (HttpContext ctx) => ServeAdminPage(ctx, "publish-promo.html"));
+            adminGroup.MapGet("/assistenza", (HttpContext ctx) => ServeAdminPage(ctx, "publish-assistenza.html"));
             adminGroup.MapGet("/orders", (HttpContext ctx) => ServeAdminPage(ctx, "orders.html"));
         }
 
