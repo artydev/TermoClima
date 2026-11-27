@@ -10,24 +10,31 @@ namespace JsonServer.Endpoints
         private static string UploadsDir() =>
             Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
 
+        private static readonly HashSet<string> AllowedExtensions =
+            new(StringComparer.OrdinalIgnoreCase) { ".webp", ".png", ".jpg", ".jpeg", ".gif", ".svg" };
+
         public static void MapMediaEndpoints(this IEndpointRouteBuilder app)
         {
             app.MapGroup("/api/media")
                .MapPost("/upload", async (IFormFile file) =>
                {
                    Directory.CreateDirectory(UploadsDir());
-                   var path = Path.Combine(UploadsDir(), file.FileName);
+                   // Strip any directory part (path traversal) and only accept images.
+                   var name = Path.GetFileName(file.FileName);
+                   if (string.IsNullOrEmpty(name) || !AllowedExtensions.Contains(Path.GetExtension(name)))
+                       return Results.BadRequest("Only image files are allowed.");
+                   var path = Path.Combine(UploadsDir(), name);
                    using var stream = new FileStream(path, FileMode.Create);
                    await file.CopyToAsync(stream);
                    return Results.Ok();
-               }).DisableAntiforgery();
+               }).DisableAntiforgery().RequireAuthorization();
 
             app.MapDelete("/api/media/delete/{fileName}", (string fileName) =>
             {
-                var path = Path.Combine(UploadsDir(), fileName);
+                var path = Path.Combine(UploadsDir(), Path.GetFileName(fileName));
                 if (File.Exists(path)) { File.Delete(path); return Results.NoContent(); }
                 return Results.NotFound();
-            });
+            }).RequireAuthorization();
 
             app.MapGet("/api/images", () =>
             {

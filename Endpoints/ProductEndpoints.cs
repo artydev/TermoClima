@@ -9,8 +9,9 @@ namespace JsonServer.Endpoints
     /// (e.g. "products"). New collections aren't creatable at runtime; they
     /// need a matching top-level key in db.json before the app starts.
     ///
-    /// These routes have no authorization at all, by design — fine for a
-    /// public product catalog, wrong for anything containing customer PII.
+    /// Reads (GET) are public so the storefront can show the catalog; writes
+    /// (POST/PUT/DELETE) require the admin cookie. Don't expose tables with
+    /// customer PII here at all.
     /// Pass table names to exclude (e.g. "orders") so they can get their own
     /// endpoints elsewhere with the right auth split instead.
     /// </summary>
@@ -31,13 +32,13 @@ namespace JsonServer.Endpoints
                     db.GetById(id, table) is { } item ? Results.Json(item) : Results.NotFound());
 
                 app.MapPost($"/{table}", (Database db, [FromBody] JsonElement body) =>
-                    Results.Created($"/{table}", db.Insert(body, table)));
+                    Results.Created($"/{table}", db.Insert(body, table))).RequireAuthorization();
 
                 app.MapPut($"/{table}/{{id}}", (Database db, string id, [FromBody] JsonElement body) =>
-                    db.Update(id, body, table) is { } item ? Results.Json(item) : Results.NotFound());
+                    db.Update(id, body, table) is { } item ? Results.Json(item) : Results.NotFound()).RequireAuthorization();
 
                 app.MapDelete($"/{table}/{{id}}", (Database db, string id) =>
-                    db.Delete(id, table) ? Results.NoContent() : Results.NotFound());
+                    db.Delete(id, table) ? Results.NoContent() : Results.NotFound()).RequireAuthorization();
             }
         }
     }

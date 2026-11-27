@@ -1,6 +1,7 @@
 using JsonServer;
 using JsonServer.Data;
 using JsonServer.Endpoints;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,15 @@ builder.Services.AddAuthentication("AdminCookie")
     .AddCookie("AdminCookie", opt => opt.LoginPath = "/login");
 builder.Services.AddAuthorization();
 
+// Brute-force protection for the admin login: 5 attempts per minute per client IP.
+builder.Services.AddRateLimiter(o =>
+{
+    o.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    o.AddPolicy("login", ctx => RateLimitPartition.GetFixedWindowLimiter(
+        ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(1) }));
+});
+
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
 builder.Services.AddSingleton<EmailService>();
 
@@ -25,6 +35,7 @@ builder.Services.Configure<AdminSettings>(builder.Configuration.GetSection("Admi
 var app = builder.Build();
 
 // --- Middleware Pipeline ---
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("Frontend");
