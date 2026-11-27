@@ -429,3 +429,5 @@ FodyWeavers.xsd
 *.msp
 # Agent session memory (may contain sensitive conversation data)
 agent_memory/
+# Agent debug transcripts
+debug.json

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace JsonServer.Endpoints
 {
@@ -19,7 +21,7 @@ namespace JsonServer.Endpoints
                 var configuredPassword = adminSettings.Value.Password;
                 var submitted = ctx.Request.Form["password"].ToString();
 
-                if (!string.IsNullOrEmpty(configuredPassword) && submitted == configuredPassword)
+                if (!string.IsNullOrEmpty(configuredPassword) && PasswordsMatch(submitted, configuredPassword))
                 {
                     var claims = new[] { new Claim(ClaimTypes.Name, "Admin") };
                     await ctx.SignInAsync("AdminCookie", new ClaimsPrincipal(new ClaimsIdentity(claims, "AdminCookie")));
@@ -28,7 +30,13 @@ namespace JsonServer.Endpoints
                     return Results.Redirect(!string.IsNullOrEmpty(returnUrl) && returnUrl.StartsWith("/") ? returnUrl : "/admin/dashboard");
                 }
                 return Results.Unauthorized();
-            });
+            }).RequireRateLimiting("login");
         }
+
+        // Constant-time comparison (hashing first so lengths are equal and don't leak).
+        private static bool PasswordsMatch(string submitted, string expected) =>
+            CryptographicOperations.FixedTimeEquals(
+                SHA256.HashData(Encoding.UTF8.GetBytes(submitted)),
+                SHA256.HashData(Encoding.UTF8.GetBytes(expected)));
     }
 }
